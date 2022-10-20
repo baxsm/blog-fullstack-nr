@@ -10,7 +10,9 @@ function Navbar() {
   return (
     <div className='navbar'>
       <div className="container">
-        <div className="logo"><span>B</span>log</div>
+        <Link to="/">
+          <div className="logo"><span>B</span>log</div>
+        </Link>
         <div className="links">
           <Link className='link' to="/?cat=art">
             <h6>ART</h6>

@@ -1,33 +1,80 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import Menu from '../Components/Menu'
+import axios from 'axios'
+import { useEffect, useState } from 'react'
+import moment from "moment"
+import { useContext } from 'react'
+import { AuthContext } from '../context/authContext'
 
 function Single() {
+
+  const [post, setPost] = useState([])
+
+  const location = useLocation()
+
+  const postId = location.pathname.split("/")[2];
+
+  const navigate  = useNavigate();
+
+  const { currentUser } = useContext(AuthContext)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await axios.get(`/posts/${postId}`);
+        setPost(res.data)
+      }
+      catch (err) {
+        console.log(err);
+      }
+    }
+    fetchData();
+  }, [postId])
+
+  const handleDelete = async () => {
+    try {
+      await axios.delete(`/posts/${postId}`);
+      navigate("/")
+    }
+    catch (err) {
+      console.log(err);
+    }
+  }
+
+  const getText = (html) => {
+    const doc = new DOMParser().parseFromString(html, "text/html");
+    return doc.body.textContent
+  }
+
   return (
     <div className="single">
       <div className="content">
-        <img src="https://images.pexels.com/photos/5925951/pexels-photo-5925951.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="" />
+        <img src={post?.image} alt="" />
         <div className="user">
-          <img src="https://images.pexels.com/photos/5925951/pexels-photo-5925951.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="" />
+          <img src={post?.userImage} alt="" />
           <div className="info">
-            <span>John</span>
-            <p>Posted 2 days ago</p>
+            <span>{post.username}</span>
+            <p>Posted {moment(post.date).fromNow()}</p>
           </div>
-          <div className="edit">
-            <Link to={`/write?edit=2`}>
-              <img src="https://cdn4.iconfinder.com/data/icons/eon-ecommerce-i-1/32/review_notes_pencil_pen-512.png" alt="" />
-            </Link>
-            <img src="https://cdn2.iconfinder.com/data/icons/squircle-ui/32/Trash-512.png" alt="" />
-          </div>
+          {
+            currentUser?.username === post.username ?
+              (
+                <div className="edit">
+                  <Link to={`/write?edit=2`} state={post}>
+                    <img src="https://cdn4.iconfinder.com/data/icons/eon-ecommerce-i-1/32/review_notes_pencil_pen-512.png" alt="" />
+                  </Link>
+                  <img onClick={handleDelete} src="https://cdn2.iconfinder.com/data/icons/squircle-ui/32/Trash-512.png" alt="" />
+                </div>
+              ) : (<></>)
+          }
         </div>
         <h1>
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit
+          {post.title}
         </h1>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Ex quae amet consequatur esse culpa. Rerum sunt quasi animi quibusdam, libero similique delectus? Commodi perferendis ipsa beatae itaque, quas iusto minus!<br></br>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ex quae amet consequatur esse culpa. Rerum sunt quasi animi quibusdam, libero similique delectus? Commodi perferendis ipsa beatae itaque, quas iusto minus!Lorem ipsum dolor sit amet consectetur adipisicing elit. Ex quae amet consequatur esse culpa. Rerum sunt quasi animi quibusdam, libero similique delectus? Commodi perferendis ipsa beatae itaque, quas iusto minus!Lorem ipsum dolor sit amet consectetur adipisicing elit. Ex quae amet consequatur esse culpa. Rerum sunt quasi animi quibusdam, libero similique delectus? Commodi perferendis ipsa beatae itaque, quas iusto minus!<br></br>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ex quae amet consequatur esse culpa. Rerum sunt quasi animi quibusdam, libero similique delectus? Commodi perferendis ipsa beatae itaque, quas iusto minus!Lorem ipsum dolor sit amet consectetur adipisicing elit. Ex quae amet consequatur esse culpa. Rerum sunt quasi animi quibusdam, libero similique delectus? Commodi perferendis ipsa beatae itaque, quas iusto minus!
-        </p>
+        { getText(post.description) }
       </div>
-      <Menu />
+      <Menu category={post.category}/>
     </div>
   )
 }
