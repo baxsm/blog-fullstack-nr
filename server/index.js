@@ -30,6 +30,11 @@ app.use("/api/posts", postRoutes)
 app.use("/api/users", userRoutes)
 app.use("/api/auth", authRoutes)
 
-app.listen(8800, () => {
-    console.log("Connected");
+app.get('/', (req, res) => {
+    res.send('Blog Fullstack @BAXSM')
+})
+
+const PORT = '8800';
+app.listen(PORT, () => {
+    console.log(`Server start on PORT: ${PORT}`);
 })
