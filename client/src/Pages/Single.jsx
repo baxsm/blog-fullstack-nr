@@ -9,6 +9,8 @@ import { AuthContext } from '../context/authContext'
 
 function Single() {
 
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
+
   const [post, setPost] = useState([])
 
   const location = useLocation()
@@ -22,7 +24,7 @@ function Single() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get(`/posts/${postId}`);
+        const res = await axios.get(`${BASE_URL}/posts/${postId}`);
         setPost(res.data)
       }
       catch (err) {
@@ -34,7 +36,7 @@ function Single() {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`/posts/${postId}`);
+      await axios.delete(`${BASE_URL}/posts/${postId}`);
       navigate("/")
     }
     catch (err) {

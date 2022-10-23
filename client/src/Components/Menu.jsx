@@ -5,12 +5,14 @@ import axios from 'axios'
 
 function Menu({ category }) {
 
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
+
   const [posts, setPosts] = useState([])
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get(`/posts/?cat=${category}`);
+        const res = await axios.get(`${BASE_URL}/posts/?cat=${category}`);
         setPosts(res.data)
       }
       catch (err) {

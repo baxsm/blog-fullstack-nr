@@ -6,17 +6,20 @@ import { createContext } from "react";
 export const AuthContext = createContext()
 
 export const AuthContextProvider = ({ children }) => {
+
+    const BASE_URL = process.env.REACT_APP_BASE_URL;
+
     const [currentUser, setCurrentUser] = useState(
         JSON.parse(localStorage.getItem("user")) || null
     )
 
     const login = async (inputs) => {
-        const res = await axios.post("/auth/login", inputs);
+        const res = await axios.post(`${BASE_URL}/auth/login`, inputs);
         setCurrentUser(res.data);
     }
 
     const logout = async (inputs) => {
-        await axios.post("/auth/logout");
+        await axios.post(`${BASE_URL}/auth/logout`);
         setCurrentUser(null);
     }
 

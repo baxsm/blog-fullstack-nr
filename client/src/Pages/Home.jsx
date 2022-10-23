@@ -7,6 +7,8 @@ import axios from "axios"
 
 function Home() {
 
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
+
   const [posts, setPosts] = useState([])
 
   const category = useLocation().search
@@ -14,7 +16,7 @@ function Home() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get(`/posts/${category}`);
+        const res = await axios.get(`${BASE_URL}/posts/${category}`);
         setPosts(res.data)
       }
       catch (err) {

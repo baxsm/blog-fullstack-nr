@@ -8,6 +8,8 @@ import moment from 'moment'
 
 function Write() {
 
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
+
   const state = useLocation().state
 
   const [value, setValue] = useState(state?.description || "") //editor
@@ -16,12 +18,11 @@ function Write() {
   const [file, setFile] = useState(null)
 
 
-
   const upload = async () => {
     try {
       const formData = new FormData();
       formData.append("file", file);
-      const res = await axios.post("/upload", formData);
+      const res = await axios.post(`${BASE_URL}/upload`, formData);
       return res.data
     }
     catch (err) {
@@ -34,14 +35,14 @@ function Write() {
     const imageUrl = await upload();
     try {
       state
-        ? await axios.put(`/posts/${state.id}`, {
+        ? await axios.put(`${BASE_URL}/posts/${state.id}`, {
           title,
           description: value,
           category,
           image: file ? imageUrl : "",
           date: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss")
         })
-        : await axios.post(`/posts/`, {
+        : await axios.post(`${BASE_URL}/posts/`, {
           title,
           description: value,
           category,

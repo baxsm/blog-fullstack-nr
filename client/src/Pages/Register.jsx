@@ -5,6 +5,8 @@ import axios from "axios"
 
 function Register() {
 
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
+
   const [inputs, setInputs] = useState({
     username: "",
     email: "",
@@ -22,7 +24,7 @@ function Register() {
   const handleSubmit = async e => {
     e.preventDefault();
     try {
-      await axios.post("/auth/register", inputs);
+      await axios.post(`${BASE_URL}/auth/register`, inputs);
       navigate("/login")
     }
     catch (err) {
