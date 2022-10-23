@@ -4,11 +4,13 @@ import userRoutes from "./routes/users.js"
 import authRoutes from "./routes/auth.js"
 import cookieParser from "cookie-parser"
 import multer from "multer"
+import cors from "cors"
 
 const app = express();
 
 app.use(express.json())
 app.use(cookieParser())
+app.use(cors())
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
