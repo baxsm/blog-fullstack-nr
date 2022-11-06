@@ -1,8 +1,3 @@
 # Blog Fullstack
 
-
-
-Client / Server
-```
-npm start
-```
+Live - https://blog-fullstack-nr.vercel.app/
